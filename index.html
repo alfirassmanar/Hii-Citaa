@@ -12,60 +12,71 @@
 
   <style>
     :root{
-      --glass: rgba(255,255,255,.55);
-      --glass-strong: rgba(255,255,255,.72);
-      --border: rgba(255,255,255,.70);
+      --bg: #ffe6f2;
       --text: #18181b;
-      --muted: rgba(24,24,27,.72);
-      --shadow: 0 12px 30px rgba(0,0,0,.14);
-      --shadow-soft: 0 10px 22px rgba(0,0,0,.10);
+      --muted: rgba(24,24,27,.70);
+
+      --glass: rgba(255,255,255,.60);
+      --glass-2: rgba(255,255,255,.78);
+      --border: rgba(255,255,255,.68);
+
+      --shadow: 0 18px 50px rgba(0,0,0,.16);
+      --shadow-soft: 0 10px 26px rgba(0,0,0,.12);
+
       --radius: 22px;
 
-      --btn-green: #22c55e;
-      --btn-green-h: #16a34a;
-      --btn-pink: #fb7185;
-      --btn-pink-h: #f43f5e;
+      --green: #22c55e;
+      --green-h: #16a34a;
+      --pink: #fb7185;
+      --pink-h: #f43f5e;
     }
 
     *{ box-sizing:border-box; margin:0; padding:0; }
 
+    html, body { height: 100%; }
+
     body{
       font-family:"Protest Riot", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      min-height:100vh;
       color: var(--text);
-      overflow:hidden;
 
-      /* background akan di-set lewat JS agar auto-detect ekstensi */
-      background: #ffe6f2;
+      /* penting: biar bisa scroll */
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      background: var(--bg);
       background-position:center;
       background-size:cover;
       background-attachment:fixed;
     }
 
-    /* subtle overlay biar teks kebaca di bg yang ramai */
+    /* overlay halus biar background ga ganggu */
     body::before{
       content:"";
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(900px 520px at 50% 20%, rgba(255,255,255,.40), transparent 65%),
-        radial-gradient(900px 520px at 50% 80%, rgba(255,255,255,.18), transparent 70%),
-        linear-gradient(to bottom, rgba(0,0,0,.06), rgba(0,0,0,.10));
       pointer-events:none;
-      z-index:0;
+      z-index: 0;
+      background:
+        radial-gradient(900px 520px at 50% 15%, rgba(255,255,255,.45), transparent 60%),
+        radial-gradient(900px 520px at 50% 85%, rgba(255,255,255,.18), transparent 65%),
+        linear-gradient(to bottom, rgba(0,0,0,.05), rgba(0,0,0,.10));
     }
 
-    .wrap{
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      padding: clamp(14px, 3vw, 22px);
-      gap: 12px;
-      text-align:center;
+    /* wrapper scroll-safe */
+    .page{
       position: relative;
       z-index: 1;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: clamp(14px, 3.2vw, 26px);
+      padding-bottom: 84px; /* ruang untuk footer + music */
+    }
+
+    .stack{
+      width: min(760px, 92vw);
+      display: grid;
+      gap: 12px;
     }
 
     .badge{
@@ -75,120 +86,113 @@
       box-shadow: var(--shadow-soft);
       border-radius: var(--radius);
       padding: 10px 14px;
-      width: min(720px, 94vw);
       font-size: 14px;
       line-height: 1.35;
-    }
-
-    .floating{
-      position: fixed;
-      opacity: .85;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.12));
-      animation: pulse 1.8s ease-in-out infinite;
-      user-select:none;
-      pointer-events:none;
-      z-index: 1;
-    }
-    .top-left{ top:16px; left:16px; width: clamp(88px, 14vw, 140px); }
-    .bottom-right{ bottom:64px; right:16px; width: clamp(96px, 16vw, 160px); }
-
-    @keyframes pulse{
-      0%,100%{ transform: translateY(0) scale(1); }
-      50%{ transform: translateY(-2px) scale(1.04); }
+      text-align: center;
     }
 
     .card{
       background: var(--glass);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       border: 1px solid var(--border);
-      border-radius: 24px;
+      border-radius: 26px;
       box-shadow: var(--shadow);
-      padding: clamp(14px, 2.2vw, 20px);
-      width: min(720px, 94vw);
-      text-align:center;
+      padding: clamp(14px, 2.6vw, 22px);
+      overflow: hidden;
+    }
+
+    .top{
+      display: grid;
+      gap: 14px;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .hero{
+      width: 100%;
+      display: grid;
+      place-items: center;
+      margin-top: 2px;
+    }
+
+    .img{
+      width: min(240px, 62vw);
+      aspect-ratio: 1/1;
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.55);
+      background: rgba(255,255,255,.25);
+    }
+
+    h1{
+      font-size: clamp(24px, 5.2vw, 48px);
+      line-height: 1.08;
+      letter-spacing: .2px;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .sub{
+      font-size: clamp(13px, 2.8vw, 16px);
+      color: var(--muted);
+      text-align: center;
     }
 
     .form{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      margin-top: 4px;
+      width: 100%;
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      margin-top: 2px;
     }
 
     label{
       width: 100%;
-      display:grid;
+      display: grid;
       gap: 10px;
-      align-items:center;
-      justify-items:center;
+      justify-items: center;
       color: var(--muted);
       font-size: 15px;
+      text-align: center;
     }
 
     input{
       width: 100%;
-      max-width: 520px;
+      max-width: 560px;
       padding: 12px 14px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.92);
       outline:none;
-      background: var(--glass-strong);
+      background: var(--glass-2);
       font-family: inherit;
       font-size: 16px;
-      box-shadow: 0 6px 14px rgba(0,0,0,.06) inset;
+      box-shadow: 0 7px 18px rgba(0,0,0,.08) inset;
       transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
     }
     input:focus{
-      border-color: rgba(255,255,255,.98);
-      box-shadow: 0 8px 18px rgba(0,0,0,.10) inset;
       transform: translateY(-1px);
+      border-color: rgba(255,255,255,.98);
+      box-shadow: 0 9px 22px rgba(0,0,0,.10) inset;
     }
 
     .msg{
-      margin-top: 10px;
-      font-size: 14px;
+      width: 100%;
       min-height: 20px;
+      font-size: 14px;
       line-height: 1.35;
+      text-align: center;
+      margin-top: 2px;
     }
     .msg.warn{ color:#e11d48; }
     .msg.ok{ color:#047857; }
 
-    .hero{
-      margin-top: 14px;
-      display:flex;
-      justify-content:center;
-    }
-
-    .img{
-      width: clamp(170px, 42vw, 240px);
-      height: clamp(170px, 42vw, 240px);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      object-fit: cover;
-      background: rgba(255,255,255,.25);
-      border: 1px solid rgba(255,255,255,.55);
-    }
-
-    h1{
-      font-size: clamp(24px, 4.6vw, 46px);
-      line-height: 1.08;
-      margin-top: 14px;
-      letter-spacing: .2px;
-    }
-
-    .sub{
-      font-size: clamp(13px, 2.6vw, 16px);
-      color: var(--muted);
-      margin-top: 8px;
-    }
-
     .btns{
-      margin-top: 16px;
       display:flex;
       flex-wrap:wrap;
       justify-content:center;
       gap: 10px;
-      align-items:center;
+      margin-top: 10px;
     }
 
     button{
@@ -199,12 +203,11 @@
       font-weight: 800;
       cursor:pointer;
       box-shadow: var(--shadow-soft);
-      transition: transform .12s ease, opacity .12s ease, background .12s ease, box-shadow .12s ease;
+      transition: transform .12s ease, opacity .12s ease, background .12s ease;
       user-select:none;
-      min-width: 140px;
+      min-width: 150px;
     }
     button:active{ transform: scale(.98); }
-    button:hover{ box-shadow: 0 14px 32px rgba(0,0,0,.14); }
     button:disabled{
       opacity:.55;
       cursor:not-allowed;
@@ -212,76 +215,84 @@
       transform:none;
     }
 
-    .yes{
-      background: var(--btn-green);
-      color:white;
-    }
-    .yes:hover{ background: var(--btn-green-h); }
+    .yes{ background: var(--green); color:#fff; }
+    .yes:hover{ background: var(--green-h); }
 
-    .no{
-      background: var(--btn-pink);
-      color:white;
-    }
-    .no:hover{ background: var(--btn-pink-h); }
+    .no{ background: var(--pink); color:#fff; }
+    .no:hover{ background: var(--pink-h); }
 
     .tip{
-      margin-top: 10px;
+      margin-top: 8px;
       font-size: 14px;
       color: var(--muted);
       min-height: 18px;
-      line-height: 1.35;
+      text-align: center;
     }
 
-    .footer{
-      position:fixed;
-      right:10px;
-      bottom:10px;
-      background: rgba(255,255,255,.35);
-      border:1px solid rgba(255,255,255,.60);
+    /* floating dekor, tapi lebih subtle & aman di layar kecil */
+    .floating{
+      position: fixed;
+      opacity: .55;
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.10));
+      animation: pulse 1.9s ease-in-out infinite;
+      user-select:none;
+      pointer-events:none;
+      z-index: 1;
+    }
+    .top-left{ top:14px; left:14px; width: clamp(72px, 12vw, 130px); }
+    .bottom-right{ bottom:84px; right:14px; width: clamp(78px, 14vw, 150px); }
+
+    @keyframes pulse{
+      0%,100%{ transform: translateY(0) scale(1); }
+      50%{ transform: translateY(-3px) scale(1.03); }
+    }
+
+    /* widget bawah */
+    .footer, .music{
+      position: fixed;
+      bottom: 10px;
+      z-index: 5;
+      background: rgba(255,255,255,.42);
+      border: 1px solid rgba(255,255,255,.62);
       backdrop-filter: blur(10px);
       padding: 8px 10px;
       border-radius: 12px;
       font-size: 13px;
-      opacity: .92;
-      z-index: 3;
+      opacity: .96;
     }
 
     .music{
-      position: fixed;
       left: 10px;
-      bottom: 10px;
-      background: rgba(255,255,255,.35);
-      border:1px solid rgba(255,255,255,.60);
-      backdrop-filter: blur(10px);
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-size: 13px;
-      opacity: .95;
-      z-index: 3;
       cursor: pointer;
       user-select:none;
       display:flex;
-      gap:8px;
       align-items:center;
+      gap:8px;
+    }
+
+    .footer{
+      right: 10px;
     }
 
     .hintTap{
       position: fixed;
       top: 10px;
       right: 10px;
-      background: rgba(255,255,255,.35);
-      border:1px solid rgba(255,255,255,.60);
+      z-index: 5;
+      background: rgba(255,255,255,.42);
+      border:1px solid rgba(255,255,255,.62);
       backdrop-filter: blur(10px);
       padding: 8px 10px;
       border-radius: 12px;
       font-size: 13px;
-      opacity: .95;
-      z-index: 3;
+      opacity: .96;
       display: none;
-      max-width: min(320px, 70vw);
+      max-width: min(320px, 72vw);
       line-height: 1.25;
+      text-align: left;
     }
 
+    /* wiggle & bounce: sama seperti logic kamu */
     @keyframes wiggle{
       0%,100%{ transform: rotate(-2deg) translateY(0); }
       50%{ transform: rotate(2deg) translateY(-2px); }
@@ -294,28 +305,30 @@
     }
     .bounce{ animation: bounce .55s ease-in-out infinite; }
 
+    /* layar YES */
     .yay{
-      min-height:100vh;
+      min-height: 100svh;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      gap:12px;
-      padding: 22px;
+      gap: 12px;
+      padding: 24px;
       text-align:center;
       position: relative;
-      z-index: 2;
+      z-index: 10;
     }
     .yay img{
       width: min(240px, 70vw);
       height: auto;
-      filter: drop-shadow(0 14px 30px rgba(0,0,0,.18));
+      filter: drop-shadow(0 16px 32px rgba(0,0,0,.18));
     }
     .yay h2{
-      font-size: clamp(24px, 5vw, 46px);
+      font-size: clamp(24px, 5.4vw, 46px);
       line-height: 1.08;
     }
 
+    /* iframe hidden */
     .yt-hidden{
       position: fixed;
       width: 1px;
@@ -326,11 +339,11 @@
       pointer-events: none;
     }
 
-    /* sedikit rapihin di layar kecil */
+    /* rapihin di layar kecil */
     @media (max-width: 420px){
-      button{ min-width: 130px; }
-      .footer{ font-size: 12px; }
-      .music, .hintTap{ font-size: 12px; }
+      button{ min-width: 138px; }
+      .footer, .music, .hintTap{ font-size: 12px; }
+      .floating{ opacity: .42; }
     }
   </style>
 </head>
@@ -347,50 +360,53 @@
     allowfullscreen
   ></iframe>
 
-  <!-- ✅ SVG dari assets kamu -->
+  <!-- ✅ SVG assets -->
   <img class="floating top-left" alt="love" src="./assets/All You Need Is Love SVG Cut File.svg">
   <img class="floating bottom-right" alt="love" src="./assets/Love In The Air SVG Cut File.svg">
 
   <div class="hintTap" id="tapHint">Ketuk di mana saja untuk menyalakan musik 🎵</div>
   <div class="music" id="musicBtn">Musik: Off 🔇</div>
-
-  <div class="wrap" id="app">
-    <div class="badge">
-      <b>Aturan 😏</b>: input harus mengandung keyword <b>namakuu!!!</b>
-    </div>
-
-    <div class="card">
-      <div class="form">
-        <label>
-          Tulis nama kamu dulu (harus ada keyword):
-          <input id="nameInput" placeholder="Contoh: namakuu!" />
-        </label>
-      </div>
-
-      <div id="msg" class="msg warn">⚠️ Isi dulu dong 😤</div>
-
-      <div class="hero">
-        <img
-          id="mainImg"
-          class="img"
-          alt="bear"
-          src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.webp"
-        />
-      </div>
-
-      <h1 id="question">Citaa, will you be my Valentine and make my heart the happiest? 💘</h1>
-      <div class="sub">*Tip: kebanyakan klik “Tidak” bikin aku dramatis 😭</div>
-
-      <div class="btns">
-        <button id="yesBtn" class="yes" disabled>Ya 💚</button>
-        <button id="noBtn" class="no" disabled>Tidak 💔</button>
-      </div>
-
-      <div class="tip" id="tip"></div>
-    </div>
-  </div>
-
   <div class="footer">Dibuat ❤️ oleh <b>Manusia Tampan</b></div>
+
+  <main class="page" id="app">
+    <div class="stack">
+      <div class="badge">
+        <b>Aturan 😏</b>: input harus mengandung keyword <b>nuha / firas / ulin</b>
+      </div>
+
+      <section class="card">
+        <div class="top">
+          <div class="form">
+            <label>
+              Tulis nama kamu dulu (harus ada keyword):
+              <input id="nameInput" placeholder="Contoh: nuha sayang kamu!" />
+            </label>
+          </div>
+
+          <div id="msg" class="msg warn">⚠️ Isi dulu dong 😤</div>
+
+          <div class="hero">
+            <img
+              id="mainImg"
+              class="img"
+              alt="bear"
+              src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.webp"
+            />
+          </div>
+
+          <h1 id="question">Citaa, will you be my Valentine and make my heart the happiest? 💘</h1>
+          <div class="sub">*Tip: kebanyakan klik “Tidak” bikin aku dramatis 😭</div>
+
+          <div class="btns">
+            <button id="yesBtn" class="yes" disabled>Ya 💚</button>
+            <button id="noBtn" class="no" disabled>Tidak 💔</button>
+          </div>
+
+          <div class="tip" id="tip"></div>
+        </div>
+      </section>
+    </div>
+  </main>
 
   <script>
     // ✅ Auto-detect background file: bg1.webp / bg1.png / bg1.jpg / bg1.jpeg
@@ -429,7 +445,6 @@
     let musicOn = false;
 
     function setYouTubeMuted(muted){
-      // reload iframe dengan mute=0/1 (simple & jalan di GitHub Pages)
       const base = "https://www.youtube.com/embed/igIfiqqVHtA";
       const params = new URLSearchParams({
         autoplay: "1",
@@ -472,7 +487,7 @@
       if (!musicOn) nyalakanMusik();
     }, { once: true });
 
-    // ===== LOGIKA APLIKASI (TETAP SAMA) =====
+    // ===== LOGIKA APLIKASI (SAMA) =====
     const input = document.getElementById("nameInput");
     const msg = document.getElementById("msg");
     const yesBtn = document.getElementById("yesBtn");
@@ -563,7 +578,7 @@
         <div class="yay">
           <img alt="yay" src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" />
           <h2>YEAAYYY, Citaa!!! 💖🥳</h2>
-          <div style="font-size:18px; max-width:900px; line-height:1.4; color: rgba(24,24,27,.88);">
+          <div style="font-size:18px; max-width:900px; line-height:1.45; color: rgba(24,24,27,.86);">
             It’s official — now I’m <b>${name}</b>’s Valentine 😚✨
           </div>
           <div style="opacity:.85; margin-top:6px;">Dibuat ❤️ oleh <b>Manusia Tampan</b></div>
