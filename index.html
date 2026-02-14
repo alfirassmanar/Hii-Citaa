@@ -13,16 +13,26 @@
   <style>
     :root{
       --glass: rgba(255,255,255,.55);
-      --border: rgba(255,255,255,.75);
-      --shadow: 0 14px 40px rgba(0,0,0,.18);
+      --glass-strong: rgba(255,255,255,.72);
+      --border: rgba(255,255,255,.70);
+      --text: #18181b;
+      --muted: rgba(24,24,27,.72);
+      --shadow: 0 12px 30px rgba(0,0,0,.14);
+      --shadow-soft: 0 10px 22px rgba(0,0,0,.10);
       --radius: 22px;
+
+      --btn-green: #22c55e;
+      --btn-green-h: #16a34a;
+      --btn-pink: #fb7185;
+      --btn-pink-h: #f43f5e;
     }
 
     *{ box-sizing:border-box; margin:0; padding:0; }
+
     body{
-      font-family:"Protest Riot", system-ui, Arial, sans-serif;
+      font-family:"Protest Riot", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       min-height:100vh;
-      color:#18181b;
+      color: var(--text);
       overflow:hidden;
 
       /* background akan di-set lewat JS agar auto-detect ekstensi */
@@ -32,139 +42,169 @@
       background-attachment:fixed;
     }
 
+    /* subtle overlay biar teks kebaca di bg yang ramai */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(900px 520px at 50% 20%, rgba(255,255,255,.40), transparent 65%),
+        radial-gradient(900px 520px at 50% 80%, rgba(255,255,255,.18), transparent 70%),
+        linear-gradient(to bottom, rgba(0,0,0,.06), rgba(0,0,0,.10));
+      pointer-events:none;
+      z-index:0;
+    }
+
     .wrap{
-      height:100vh;
+      min-height:100vh;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding:18px;
-      gap:14px;
+      padding: clamp(14px, 3vw, 22px);
+      gap: 12px;
       text-align:center;
+      position: relative;
+      z-index: 1;
     }
 
     .badge{
       background: var(--glass);
       backdrop-filter: blur(10px);
       border: 1px solid var(--border);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-soft);
       border-radius: var(--radius);
       padding: 10px 14px;
-      max-width: 980px;
-      width: min(980px, 95vw);
-      position: relative;
-      z-index: 1;
+      width: min(720px, 94vw);
+      font-size: 14px;
+      line-height: 1.35;
     }
 
     .floating{
       position: fixed;
-      opacity: .95;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.16));
-      animation: pulse 1.6s ease-in-out infinite;
+      opacity: .85;
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.12));
+      animation: pulse 1.8s ease-in-out infinite;
       user-select:none;
       pointer-events:none;
-      z-index: 0;
+      z-index: 1;
     }
-    .top-left{ top:18px; left:18px; width:140px; }
-    .bottom-right{ bottom:60px; right:18px; width:160px; }
+    .top-left{ top:16px; left:16px; width: clamp(88px, 14vw, 140px); }
+    .bottom-right{ bottom:64px; right:16px; width: clamp(96px, 16vw, 160px); }
 
     @keyframes pulse{
-      0%,100%{ transform: scale(1); }
-      50%{ transform: scale(1.06); }
+      0%,100%{ transform: translateY(0) scale(1); }
+      50%{ transform: translateY(-2px) scale(1.04); }
     }
 
     .card{
-      position: relative;
-      z-index: 1;
       background: var(--glass);
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 24px;
       box-shadow: var(--shadow);
-      padding: 18px 16px;
-      max-width: 980px;
-      width: min(980px, 95vw);
-    }
-
-    .img{
-      width: 240px;
-      height: 240px;
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      object-fit: cover;
-      background: rgba(255,255,255,.25);
-    }
-
-    h1{
-      font-size: clamp(28px, 5vw, 56px);
-      line-height: 1.05;
-      margin-top: 12px;
-    }
-
-    .sub{
-      font-size: clamp(14px, 2.5vw, 18px);
-      opacity: .86;
-      margin-top: 6px;
+      padding: clamp(14px, 2.2vw, 20px);
+      width: min(720px, 94vw);
+      text-align:center;
     }
 
     .form{
       display:flex;
-      flex-wrap:wrap;
       justify-content:center;
       align-items:center;
-      gap:10px;
       margin-top: 4px;
     }
 
     label{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+      width: 100%;
+      display:grid;
+      gap: 10px;
       align-items:center;
-      justify-content:center;
+      justify-items:center;
+      color: var(--muted);
+      font-size: 15px;
     }
 
     input{
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.9);
+      width: 100%;
+      max-width: 520px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.92);
       outline:none;
-      min-width: min(360px, 85vw);
-      background: rgba(255,255,255,.72);
+      background: var(--glass-strong);
       font-family: inherit;
       font-size: 16px;
-      box-shadow: 0 6px 14px rgba(0,0,0,.08) inset;
+      box-shadow: 0 6px 14px rgba(0,0,0,.06) inset;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    input:focus{
+      border-color: rgba(255,255,255,.98);
+      box-shadow: 0 8px 18px rgba(0,0,0,.10) inset;
+      transform: translateY(-1px);
     }
 
     .msg{
-      margin-top: 6px;
+      margin-top: 10px;
       font-size: 14px;
       min-height: 20px;
+      line-height: 1.35;
     }
     .msg.warn{ color:#e11d48; }
     .msg.ok{ color:#047857; }
 
-    .btns{
+    .hero{
       margin-top: 14px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .img{
+      width: clamp(170px, 42vw, 240px);
+      height: clamp(170px, 42vw, 240px);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      object-fit: cover;
+      background: rgba(255,255,255,.25);
+      border: 1px solid rgba(255,255,255,.55);
+    }
+
+    h1{
+      font-size: clamp(24px, 4.6vw, 46px);
+      line-height: 1.08;
+      margin-top: 14px;
+      letter-spacing: .2px;
+    }
+
+    .sub{
+      font-size: clamp(13px, 2.6vw, 16px);
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .btns{
+      margin-top: 16px;
       display:flex;
       flex-wrap:wrap;
       justify-content:center;
-      gap:10px;
+      gap: 10px;
       align-items:center;
     }
 
     button{
       border:none;
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 12px 16px;
       font-family: inherit;
-      font-weight: 700;
+      font-weight: 800;
       cursor:pointer;
-      box-shadow: var(--shadow);
-      transition: transform .12s ease, opacity .12s ease, background .12s ease;
+      box-shadow: var(--shadow-soft);
+      transition: transform .12s ease, opacity .12s ease, background .12s ease, box-shadow .12s ease;
       user-select:none;
+      min-width: 140px;
     }
     button:active{ transform: scale(.98); }
+    button:hover{ box-shadow: 0 14px 32px rgba(0,0,0,.14); }
     button:disabled{
       opacity:.55;
       cursor:not-allowed;
@@ -173,100 +213,109 @@
     }
 
     .yes{
-      background:#22c55e;
+      background: var(--btn-green);
       color:white;
     }
-    .yes:hover{ background:#16a34a; }
+    .yes:hover{ background: var(--btn-green-h); }
 
     .no{
-      background:#fb7185;
+      background: var(--btn-pink);
       color:white;
     }
-    .no:hover{ background:#f43f5e; }
+    .no:hover{ background: var(--btn-pink-h); }
 
     .tip{
       margin-top: 10px;
       font-size: 14px;
-      opacity:.82;
+      color: var(--muted);
       min-height: 18px;
+      line-height: 1.35;
     }
 
     .footer{
       position:fixed;
       right:10px;
       bottom:10px;
-      background: rgba(255,255,255,.38);
-      border:1px solid rgba(255,255,255,.65);
-      backdrop-filter: blur(10px);
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-size: 13px;
-      opacity: .9;
-      z-index: 2;
-    }
-
-    /* Tombol musik */
-    .music{
-      position: fixed;
-      left: 10px;
-      bottom: 10px;
-      background: rgba(255,255,255,.38);
-      border:1px solid rgba(255,255,255,.65);
+      background: rgba(255,255,255,.35);
+      border:1px solid rgba(255,255,255,.60);
       backdrop-filter: blur(10px);
       padding: 8px 10px;
       border-radius: 12px;
       font-size: 13px;
       opacity: .92;
-      z-index: 2;
+      z-index: 3;
+    }
+
+    .music{
+      position: fixed;
+      left: 10px;
+      bottom: 10px;
+      background: rgba(255,255,255,.35);
+      border:1px solid rgba(255,255,255,.60);
+      backdrop-filter: blur(10px);
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      opacity: .95;
+      z-index: 3;
       cursor: pointer;
       user-select:none;
+      display:flex;
+      gap:8px;
+      align-items:center;
     }
 
     .hintTap{
       position: fixed;
       top: 10px;
       right: 10px;
-      background: rgba(255,255,255,.38);
-      border:1px solid rgba(255,255,255,.65);
+      background: rgba(255,255,255,.35);
+      border:1px solid rgba(255,255,255,.60);
       backdrop-filter: blur(10px);
       padding: 8px 10px;
       border-radius: 12px;
       font-size: 13px;
-      opacity: .92;
-      z-index: 2;
+      opacity: .95;
+      z-index: 3;
       display: none;
+      max-width: min(320px, 70vw);
+      line-height: 1.25;
     }
 
-    /* goyang untuk tombol Tidak */
     @keyframes wiggle{
       0%,100%{ transform: rotate(-2deg) translateY(0); }
       50%{ transform: rotate(2deg) translateY(-2px); }
     }
     .wiggle{ animation: wiggle .25s ease-in-out infinite; }
 
-    /* loncat gambar kalau kebanyakan Tidak */
     @keyframes bounce{
       0%,100%{ transform: translateY(0); }
       50%{ transform: translateY(-8px); }
     }
     .bounce{ animation: bounce .55s ease-in-out infinite; }
 
-    /* layar YES */
     .yay{
+      min-height:100vh;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
       gap:12px;
-      height:100vh;
-      padding:18px;
+      padding: 22px;
       text-align:center;
+      position: relative;
+      z-index: 2;
+    }
+    .yay img{
+      width: min(240px, 70vw);
+      height: auto;
+      filter: drop-shadow(0 14px 30px rgba(0,0,0,.18));
     }
     .yay h2{
-      font-size: clamp(22px, 4vw, 44px);
+      font-size: clamp(24px, 5vw, 46px);
+      line-height: 1.08;
     }
 
-    /* iframe disembunyikan */
     .yt-hidden{
       position: fixed;
       width: 1px;
@@ -275,6 +324,13 @@
       top: -9999px;
       opacity: 0;
       pointer-events: none;
+    }
+
+    /* sedikit rapihin di layar kecil */
+    @media (max-width: 420px){
+      button{ min-width: 130px; }
+      .footer{ font-size: 12px; }
+      .music, .hintTap{ font-size: 12px; }
     }
   </style>
 </head>
@@ -306,14 +362,14 @@
     <div class="card">
       <div class="form">
         <label>
-          Tulis nama aku dulu:
+          Tulis nama kamu dulu (harus ada keyword):
           <input id="nameInput" placeholder="Contoh: namakuu!" />
         </label>
       </div>
 
       <div id="msg" class="msg warn">⚠️ Isi dulu dong 😤</div>
 
-      <div style="margin-top:14px;">
+      <div class="hero">
         <img
           id="mainImg"
           class="img"
@@ -416,7 +472,7 @@
       if (!musicOn) nyalakanMusik();
     }, { once: true });
 
-    // ===== LOGIKA APLIKASI =====
+    // ===== LOGIKA APLIKASI (TETAP SAMA) =====
     const input = document.getElementById("nameInput");
     const msg = document.getElementById("msg");
     const yesBtn = document.getElementById("yesBtn");
@@ -507,7 +563,7 @@
         <div class="yay">
           <img alt="yay" src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" />
           <h2>YEAAYYY, Citaa!!! 💖🥳</h2>
-          <div style="font-size:18px; max-width:900px;">
+          <div style="font-size:18px; max-width:900px; line-height:1.4; color: rgba(24,24,27,.88);">
             It’s official — now I’m <b>${name}</b>’s Valentine 😚✨
           </div>
           <div style="opacity:.85; margin-top:6px;">Dibuat ❤️ oleh <b>Manusia Tampan</b></div>
