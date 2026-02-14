@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Untuk Citaa 💘</title>
+  <meta name="description" content="Citaa, mau jadi Valentine aku? 💘" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --glass: rgba(255,255,255,.55);
+      --border: rgba(255,255,255,.75);
+      --shadow: 0 14px 40px rgba(0,0,0,.18);
+      --radius: 22px;
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{
+      font-family:"Protest Riot", system-ui, Arial, sans-serif;
+      min-height:100vh;
+      color:#18181b;
+      overflow:hidden;
+
+      /* background akan di-set lewat JS agar auto-detect ekstensi */
+      background: #ffe6f2;
+      background-position:center;
+      background-size:cover;
+      background-attachment:fixed;
+    }
+
+    .wrap{
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      gap:14px;
+      text-align:center;
+    }
+
+    .badge{
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      max-width: 980px;
+      width: min(980px, 95vw);
+      position: relative;
+      z-index: 1;
+    }
+
+    .floating{
+      position: fixed;
+      opacity: .95;
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.16));
+      animation: pulse 1.6s ease-in-out infinite;
+      user-select:none;
+      pointer-events:none;
+      z-index: 0;
+    }
+    .top-left{ top:18px; left:18px; width:140px; }
+    .bottom-right{ bottom:60px; right:18px; width:160px; }
+
+    @keyframes pulse{
+      0%,100%{ transform: scale(1); }
+      50%{ transform: scale(1.06); }
+    }
+
+    .card{
+      position: relative;
+      z-index: 1;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 18px 16px;
+      max-width: 980px;
+      width: min(980px, 95vw);
+    }
+
+    .img{
+      width: 240px;
+      height: 240px;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      object-fit: cover;
+      background: rgba(255,255,255,.25);
+    }
+
+    h1{
+      font-size: clamp(28px, 5vw, 56px);
+      line-height: 1.05;
+      margin-top: 12px;
+    }
+
+    .sub{
+      font-size: clamp(14px, 2.5vw, 18px);
+      opacity: .86;
+      margin-top: 6px;
+    }
+
+    .form{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      margin-top: 4px;
+    }
+
+    label{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+    }
+
+    input{
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.9);
+      outline:none;
+      min-width: min(360px, 85vw);
+      background: rgba(255,255,255,.72);
+      font-family: inherit;
+      font-size: 16px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.08) inset;
+    }
+
+    .msg{
+      margin-top: 6px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+    .msg.warn{ color:#e11d48; }
+    .msg.ok{ color:#047857; }
+
+    .btns{
+      margin-top: 14px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      align-items:center;
+    }
+
+    button{
+      border:none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-weight: 700;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+      transition: transform .12s ease, opacity .12s ease, background .12s ease;
+      user-select:none;
+    }
+    button:active{ transform: scale(.98); }
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      box-shadow:none;
+      transform:none;
+    }
+
+    .yes{
+      background:#22c55e;
+      color:white;
+    }
+    .yes:hover{ background:#16a34a; }
+
+    .no{
+      background:#fb7185;
+      color:white;
+    }
+    .no:hover{ background:#f43f5e; }
+
+    .tip{
+      margin-top: 10px;
+      font-size: 14px;
+      opacity:.82;
+      min-height: 18px;
+    }
+
+    .footer{
+      position:fixed;
+      right:10px;
+      bottom:10px;
+      background: rgba(255,255,255,.38);
+      border:1px solid rgba(255,255,255,.65);
+      backdrop-filter: blur(10px);
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      opacity: .9;
+      z-index: 2;
+    }
+
+    /* Tombol musik */
+    .music{
+      position: fixed;
+      left: 10px;
+      bottom: 10px;
+      background: rgba(255,255,255,.38);
+      border:1px solid rgba(255,255,255,.65);
+      backdrop-filter: blur(10px);
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      opacity: .92;
+      z-index: 2;
+      cursor: pointer;
+      user-select:none;
+    }
+
+    .hintTap{
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,.38);
+      border:1px solid rgba(255,255,255,.65);
+      backdrop-filter: blur(10px);
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      opacity: .92;
+      z-index: 2;
+      display: none;
+    }
+
+    /* goyang untuk tombol Tidak */
+    @keyframes wiggle{
+      0%,100%{ transform: rotate(-2deg) translateY(0); }
+      50%{ transform: rotate(2deg) translateY(-2px); }
+    }
+    .wiggle{ animation: wiggle .25s ease-in-out infinite; }
+
+    /* loncat gambar kalau kebanyakan Tidak */
+    @keyframes bounce{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-8px); }
+    }
+    .bounce{ animation: bounce .55s ease-in-out infinite; }
+
+    /* layar YES */
+    .yay{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      height:100vh;
+      padding:18px;
+      text-align:center;
+    }
+    .yay h2{
+      font-size: clamp(22px, 4vw, 44px);
+    }
+
+    /* iframe disembunyikan */
+    .yt-hidden{
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      left: -9999px;
+      top: -9999px;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ✅ YouTube Music (mulai MUTE agar autoplay lebih tembus; nanti unmute setelah tap/klik pertama) -->
+  <!-- Video ID: igIfiqqVHtA -->
+  <iframe
+    id="ytplayer"
+    class="yt-hidden"
+    src="https://www.youtube.com/embed/igIfiqqVHtA?autoplay=1&loop=1&playlist=igIfiqqVHtA&controls=0&mute=1"
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  ></iframe>
+
+  <!-- ✅ SVG dari assets kamu -->
+  <img class="floating top-left" alt="love" src="./assets/All You Need Is Love SVG Cut File.svg">
+  <img class="floating bottom-right" alt="love" src="./assets/Love In The Air SVG Cut File.svg">
+
+  <div class="hintTap" id="tapHint">Ketuk di mana saja untuk menyalakan musik 🎵</div>
+  <div class="music" id="musicBtn">Musik: Off 🔇</div>
+
+  <div class="wrap" id="app">
+    <div class="badge">
+      <b>Aturan 😏</b>: input harus mengandung keyword <b>namakuu!!!</b>
+    </div>
+
+    <div class="card">
+      <div class="form">
+        <label>
+          Tulis nama aku dulu:
+          <input id="nameInput" placeholder="Contoh: namakuu!" />
+        </label>
+      </div>
+
+      <div id="msg" class="msg warn">⚠️ Isi dulu dong 😤</div>
+
+      <div style="margin-top:14px;">
+        <img
+          id="mainImg"
+          class="img"
+          alt="bear"
+          src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.webp"
+        />
+      </div>
+
+      <h1 id="question">Citaa, will you be my Valentine and make my heart the happiest? 💘</h1>
+      <div class="sub">*Tip: kebanyakan klik “Tidak” bikin aku dramatis 😭</div>
+
+      <div class="btns">
+        <button id="yesBtn" class="yes" disabled>Ya 💚</button>
+        <button id="noBtn" class="no" disabled>Tidak 💔</button>
+      </div>
+
+      <div class="tip" id="tip"></div>
+    </div>
+  </div>
+
+  <div class="footer">Dibuat ❤️ oleh <b>Manusia Tampan</b></div>
+
+  <script>
+    // ✅ Auto-detect background file: bg1.webp / bg1.png / bg1.jpg / bg1.jpeg
+    (function setBackground(){
+      const candidates = [
+        "./assets/bg1.webp",
+        "./assets/bg1.png",
+        "./assets/bg1.jpg",
+        "./assets/bg1.jpeg",
+        "./assets/bg1"
+      ];
+
+      let i = 0;
+      const tryNext = () => {
+        if (i >= candidates.length) return;
+        const url = candidates[i++];
+        const img = new Image();
+        img.onload = () => {
+          document.body.style.backgroundImage = `url("${url}")`;
+          document.body.style.backgroundPosition = "center";
+          document.body.style.backgroundSize = "cover";
+          document.body.style.backgroundAttachment = "fixed";
+        };
+        img.onerror = tryNext;
+        img.src = url;
+      };
+      tryNext();
+    })();
+
+    // ===== KONTROL MUSIK =====
+    const yt = document.getElementById("ytplayer");
+    const musicBtn = document.getElementById("musicBtn");
+    const tapHint = document.getElementById("tapHint");
+
+    // penting: status awal OFF supaya tap pertama pasti memicu nyalakan (unmute)
+    let musicOn = false;
+
+    function setYouTubeMuted(muted){
+      // reload iframe dengan mute=0/1 (simple & jalan di GitHub Pages)
+      const base = "https://www.youtube.com/embed/igIfiqqVHtA";
+      const params = new URLSearchParams({
+        autoplay: "1",
+        loop: "1",
+        playlist: "igIfiqqVHtA",
+        controls: "0",
+        mute: muted ? "1" : "0",
+      });
+      yt.src = `${base}?${params.toString()}`;
+    }
+
+    // start muted untuk kompatibilitas autoplay policy
+    setYouTubeMuted(true);
+    musicBtn.textContent = "Musik: Off 🔇";
+    tapHint.style.display = "block";
+
+    function nyalakanMusik(){
+      if (musicOn) return;
+      musicOn = true;
+      setYouTubeMuted(false);
+      musicBtn.textContent = "Musik: On 🔊";
+      tapHint.style.display = "none";
+    }
+
+    function matikanMusik(){
+      musicOn = false;
+      setYouTubeMuted(true);
+      musicBtn.textContent = "Musik: Off 🔇";
+      tapHint.style.display = "block";
+    }
+
+    musicBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (musicOn) matikanMusik();
+      else nyalakanMusik();
+    });
+
+    // interaksi pertama user di mana saja = nyalakan musik (paling kompatibel)
+    document.addEventListener("pointerdown", () => {
+      if (!musicOn) nyalakanMusik();
+    }, { once: true });
+
+    // ===== LOGIKA APLIKASI =====
+    const input = document.getElementById("nameInput");
+    const msg = document.getElementById("msg");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const mainImg = document.getElementById("mainImg");
+    const tip = document.getElementById("tip");
+
+    const keywords = ["nuha", "firas", "ulin"];
+    let noCount = 0;
+
+    const phrases = [
+      "Tidak 😒",
+      "Yakin? 🥺",
+      "Beneran yakin?? 😭",
+      "Coba pikir lagi 😔",
+      "Tolonggg 🥹",
+      "Punya hati dikit dong 💔",
+      "Jangan gitu dong 😤",
+      "Kesempatan terakhir 😣",
+      "PLISSS 😭💘",
+      "Hatiku hancur 💔😭",
+    ];
+
+    function escapeHtml(str){
+      return str
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function setButtons(enabled){
+      yesBtn.disabled = !enabled;
+      noBtn.disabled = !enabled;
+
+      if(!enabled){
+        yesBtn.style.fontSize = "16px";
+        noBtn.textContent = "Tidak 💔";
+        noBtn.classList.remove("wiggle");
+        mainImg.classList.remove("bounce");
+        noCount = 0;
+      }
+    }
+
+    function validate(){
+      const normalized = input.value.trim().toLowerCase();
+
+      if(normalized.length === 0){
+        msg.className = "msg warn";
+        msg.textContent = "⚠️ Isi dulu dong 😤";
+        tip.textContent = "";
+        setButtons(false);
+        return;
+      }
+
+      const hasKeyword = keywords.some(k => normalized.includes(k));
+      if(!hasKeyword){
+        msg.className = "msg warn";
+        msg.innerHTML = `siapa itu wkwk 😭 (harus ada: <b>${keywords.join(" / ")}</b>)`;
+        tip.textContent = "";
+        setButtons(false);
+        return;
+      }
+
+      msg.className = "msg ok";
+      msg.innerHTML = `✅ Oke kamu suka aku? (<b>${escapeHtml(input.value.trim())}</b>), awas ya, sekarang ngaku 😎`;
+      tip.textContent = "Sekarang kamu boleh klik tombolnya 😏";
+      setButtons(true);
+    }
+
+    input.addEventListener("input", validate);
+
+    noBtn.addEventListener("click", () => {
+      noCount++;
+      const size = 16 + (noCount * 6);
+      yesBtn.style.fontSize = size + "px";
+
+      noBtn.textContent = phrases[Math.min(noCount, phrases.length - 1)];
+
+      if(noCount >= 6) mainImg.classList.add("bounce");
+      if(noCount >= 8) noBtn.classList.add("wiggle");
+    });
+
+    yesBtn.addEventListener("click", () => {
+      const name = escapeHtml(input.value.trim());
+      document.body.innerHTML = `
+        <div class="yay">
+          <img alt="yay" src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" />
+          <h2>YEAAYYY, Citaa!!! 💖🥳</h2>
+          <div style="font-size:18px; max-width:900px;">
+            It’s official — now I’m <b>${name}</b>’s Valentine 😚✨
+          </div>
+          <div style="opacity:.85; margin-top:6px;">Dibuat ❤️ oleh <b>Manusia Tampan</b></div>
+        </div>
+      `;
+    });
+
+    // init
+    validate();
+  </script>
+</body>
+</html>
